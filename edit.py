@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 import os
 import sys
 import glob
 import subprocess
 import shutil
 
+
 def exit():
   # Remove the tmp dir and exit gracefully
   shutil.rmtree('tmp')
   sys.exit(0)
+
 
 def edit(svg_file, dir, name):
   # Copy the svg file to tmp/
@@ -33,6 +36,7 @@ def edit(svg_file, dir, name):
   # Copy the temp file to the relevant directory
   new_filename = '{}/{}.svg'.format(dir, base_filename)
   shutil.copyfile(tmp_filename, new_filename)
+
 
 def handle_file(svg_file):
   basename = svg_file[svg_file.index('/') + 1:]
@@ -72,29 +76,35 @@ def handle_file(svg_file):
   # Remove the original file
   os.remove(svg_file)
 
-# Make normals, variants, and tmp directories if they don't exist
-try:
-  os.mkdir('normals')
-except FileExistsError:
-  pass
 
-try:
-  os.mkdir('variants')
-except FileExistsError:
-  pass
+def main():
+  # Make normals, variants, and tmp directories if they don't exist
+  try:
+    os.mkdir('normals')
+  except FileExistsError:
+    pass
 
-try:
-  os.mkdir('tmp')
-except FileExistsError:
-  pass
+  try:
+    os.mkdir('variants')
+  except FileExistsError:
+    pass
 
-# Get the graphics filenames
-svg_files = glob.glob('graphics/*.svg')
-if not svg_files:
-  print('No graphics found!')
-  sys.exit(-1)
+  try:
+    os.mkdir('tmp')
+  except FileExistsError:
+    pass
 
-print('Use "exit" to exit at any point.')
+  # Get the graphics filenames
+  svg_files = glob.glob('graphics/*.svg')
+  if not svg_files:
+    print('No graphics found!')
+    sys.exit(-1)
 
-for svg_file in svg_files:
-  handle_file(svg_file.replace('\\', '/'))
+  print('Use "exit" to exit at any point.')
+
+  for svg_file in svg_files:
+    handle_file(svg_file.replace('\\', '/'))
+
+
+if __name__ == '__main__':
+  main()
